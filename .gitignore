@@ -1,0 +1,32 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+pip-log.txt
+celerybeat-schedule
+*.coverage
+.coverage.*
+.tox
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.vscode/
+*.vscode/
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/

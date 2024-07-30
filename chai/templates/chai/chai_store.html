@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Chai Store{% endblock %}
+{% block content %}
+<div class="container mx-auto my-8">
+    <h1 class="text-3xl font-bold text-center my-8 text-black">Chai Store</h1>
+    <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+        <form method="POST" class="mb-4 text-black">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">Search Store</button>
+        </form>
+
+        {% if stores %}
+        <h2 class="text-2xl font-semibold text-gray-800 my-4">Stores Available</h2>
+        <ul class="list-disc pl-5">
+            {% for store in stores %}
+            <li class="text-gray-700">{{ store.name }} - {{ store.location }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
