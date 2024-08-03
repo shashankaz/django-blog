@@ -2,11 +2,11 @@
 
 ### Create Virtual Environment
 
-- **Using venv**:
+- **Using py**:
   ```bash
   py -m venv .venv
   ```
-- **Using pip**:
+- **Using uv**:
   ```bash
   pip install uv
   uv venv
@@ -28,6 +28,16 @@
   uv pip install Django
   ```
 
+### Freeze Requirements
+```bash
+pip freeze > requirements.txt
+```
+
+### Install from Requirements
+```bash
+pip install -r requirements.txt
+```
+
 ### Start a Django Project
 ```bash
 django-admin startproject projectname
@@ -41,9 +51,9 @@ python manage.py runserver 8001
 ```
 
 ### Folder Structure
-- **Root level**
-- **Project level**
-- **App level**
+- **Root level**: Contains the virtual environment, `manage.py`, and the project directory.
+- **Project level**: Contains settings, URLs, and WSGI/ASGI configuration.
+- **App level**: Contains models, views, admin, and app-specific files.
 
 ### Application Flow
 ```
@@ -57,6 +67,15 @@ user -> req -> urls.py -> views.py -> res
 ```bash
 python manage.py startapp appname
 ```
+
+### Register the App
+- **Add the app to `INSTALLED_APPS` in `settings.py`**:
+  ```python
+  INSTALLED_APPS = [
+      ...,
+      'appname',
+  ]
+  ```
 
 ### Tailwind Integration
 
@@ -80,15 +99,17 @@ python manage.py startapp appname
   ```
 
 ### Add Theme to App
-```python
-TAILWIND_APP_NAME = 'theme'
-INTERNAL_IPS = ['127.0.0.1']
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
-```
+- **Add to `settings.py`**:
+  ```python
+  TAILWIND_APP_NAME = 'theme'
+  INTERNAL_IPS = ['127.0.0.1']
+  NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+  ```
 
-```bash
-python manage.py tailwind install
-```
+- **Install Tailwind**:
+  ```bash
+  python manage.py tailwind install
+  ```
 
 ### Modify `layout.html`
 - Custom modifications as per your requirement.
@@ -136,13 +157,13 @@ python manage.py changepassword <user_name>
   python -m pip install pillow
   ```
 
-- **Add to settings.py**:
+- **Add to `settings.py`**:
   ```python
   MEDIA_URL = '/media/'
-  MEDIA_ROOT = 'path_to_media_root'
+  MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
   ```
 
-- **Add to urls.py**:
+- **Add to `urls.py`**:
   ```python
   from django.conf import settings
   from django.conf.urls.static import static
@@ -153,7 +174,7 @@ python manage.py changepassword <user_name>
 ### Migrations
 - **Create Migrations**:
   ```bash
-  python manage.py makemigrations m01
+  python manage.py makemigrations appname
   ```
 
 - **Apply Migrations**:
@@ -167,11 +188,85 @@ python manage.py changepassword <user_name>
 ### List All Database Objects to Views
 - Custom modifications as per your requirement.
 
-### Modify Template (e.g., m01)
+### Modify Template
 - Custom modifications as per your requirement.
 
 ### Whenever Models Change
 ```bash
-python manage.py makemigrations m01
+python manage.py makemigrations appname
 python manage.py migrate
 ```
+
+### Additional Important Steps
+
+### Install and Configure Static Files
+- **Add to `settings.py`**:
+  ```python
+  STATIC_URL = '/static/'
+  STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+  STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+  ```
+
+- **Collect Static Files**:
+  ```bash
+  python manage.py collectstatic
+  ```
+
+### Using the Django Shell
+```bash
+python manage.py shell
+```
+
+### Debugging
+- **Use Django Debug Toolbar**:
+  ```bash
+  pip install django-debug-toolbar
+  ```
+
+- **Add to `INSTALLED_APPS` and `MIDDLEWARE`**:
+  ```python
+  INSTALLED_APPS = [
+      ...,
+      'debug_toolbar',
+  ]
+
+  MIDDLEWARE = [
+      ...,
+      'debug_toolbar.middleware.DebugToolbarMiddleware',
+  ]
+  ```
+
+- **Add to `urls.py`**:
+  ```python
+  import debug_toolbar
+  from django.conf import settings
+  from django.urls import include, path
+  
+  if settings.DEBUG:
+      urlpatterns = [
+          path('__debug__/', include(debug_toolbar.urls)),
+      ] + urlpatterns
+  ```
+
+### Logging
+- **Configure Logging in `settings.py`**:
+  ```python
+  LOGGING = {
+      'version': 1,
+      'disable_existing_loggers': False,
+      'handlers': {
+          'file': {
+              'level': 'DEBUG',
+              'class': 'logging.FileHandler',
+              'filename': 'debug.log',
+          },
+      },
+      'loggers': {
+          'django': {
+              'handlers': ['file'],
+              'level': 'DEBUG',
+              'propagate': True,
+          },
+      },
+  }
+  ```
